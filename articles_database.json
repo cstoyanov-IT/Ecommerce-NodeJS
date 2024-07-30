@@ -1,0 +1,92 @@
+[
+  {
+    "date": "2024-07-29 | 15:50:40",
+    "nom": "Test1",
+    "code": "1",
+    "description": "Article 1",
+    "image": "uploads/168df811cb903756ef81d7b2f52f75a8",
+    "prix": "900",
+    "quantite": "1"
+  },
+  {
+    "date": "2024-07-29 | 16:05:56",
+    "nom": "Test2",
+    "code": "2",
+    "description": "Article 2",
+    "image": "uploads/d5f89467cf2e766c93198bd8a8dbad4f",
+    "prix": "902",
+    "quantite": "1"
+  },
+  {
+    "date": "2024-07-29 | 16:11:29",
+    "nom": "Test3",
+    "code": "3",
+    "description": "Article 3",
+    "image": "uploads/f2a7aeedfccf4b91bc2fa725574acaf7",
+    "prix": "903",
+    "quantite": "1"
+  },
+  {
+    "date": "2024-07-29 | 16:15:52",
+    "nom": "Test4",
+    "code": "4",
+    "description": "Article 4",
+    "image": "uploads/228fc9d84423c832a8990f8ff79e05b0",
+    "prix": "903",
+    "quantite": "1"
+  },
+  {
+    "date": "2024-07-29 | 16:16:42",
+    "nom": "Test5",
+    "code": "5",
+    "description": "Article 5",
+    "image": "uploads/76159f87d74651b4cca2df199dbbc6fc",
+    "prix": "905",
+    "quantite": "1"
+  },
+  {
+    "date": "2024-07-29 | 16:27:38",
+    "nom": "Test6",
+    "code": "6",
+    "description": "6",
+    "image": "uploads/4674c0259e6b462442aa2974e14acfa9",
+    "prix": "906",
+    "quantite": "1"
+  },
+  {
+    "date": "2024-07-29 | 16:36:05",
+    "nom": "Test7",
+    "code": "7",
+    "description": "7",
+    "image": "uploads/f3866a722be913d7535e6de95e0e6e10",
+    "prix": "907",
+    "quantite": "1"
+  },
+  {
+    "date": "2024-07-29 | 16:44:36",
+    "nom": "Test8",
+    "code": "8",
+    "description": "8",
+    "image": "uploads/2fc94003697d1bfc9114ed1fe05f2b45",
+    "prix": "908",
+    "quantite": "1"
+  },
+  {
+    "date": "2024-07-29 | 16:47:55",
+    "nom": "Test9",
+    "code": "9",
+    "description": "9",
+    "image": "uploads/eb4d05e6e37278dde9e1656e2903b634",
+    "prix": "909",
+    "quantite": "1"
+  },
+  {
+    "date": "2024-07-29 | 16:51:44",
+    "nom": "Test10",
+    "code": "10",
+    "description": "10",
+    "image": "uploads/4792e55c76d6f43d22fd3b2301c31dc4",
+    "prix": "10",
+    "quantite": "1"
+  }
+]

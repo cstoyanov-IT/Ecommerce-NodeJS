@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Créer un compte</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Créer un compte</h1>
+    <form action="/register" method="post">
+      <label for="username">Nom d'utilisateur</label>
+      <input type="text" id="username" name="username" required minlength="3" maxlength="40">
+      <br>
+      <label for="password">Mot de passe</label>
+      <input type="password" id="password" name="password" required minlength="8" maxlength="40">
+      <br>
+      <label for="confirm-password">Confirmer le mot de passe</label>
+      <input type="password" id="confirm-password" name="confirm-password" required minlength="8" maxlength="40">
+      <br>
+      <input type="submit" value="Register">
+      <a href="/login">Retour à la page d'identification</a>
+    </form>
+  </div>
+</body>
+
+</html>

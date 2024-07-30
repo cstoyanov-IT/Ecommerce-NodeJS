@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="/style.css">
+ </head>
+<body>
+  <div class="container">
+    <h1>Admin Panel</h1>
+    <a href="/logout">Déconnexion</a>
+
+    <% if (locals.successMessage) { %>
+      <p class="success-message">
+        <%= locals.successMessage %>
+      </p>
+      <% } %>
+
+        <% if (locals.errorMessage) { %>
+          <p class="error-message">
+            <%= locals.errorMessage %>
+          </p>
+          <% } %>
+            <h2>Liste des articles</h2>
+            <% if (Array.isArray(locals.articles) && locals.articles.length> 0) { %>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Nom</th>
+                    <th>Code</th>
+                    <th>Description</th>
+                    <th>Image</th>
+                    <th>Prix</th>
+                    <th>Quantité</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for (let article of locals.articles) { %>
+                    <tr>
+                      <td>
+                        <%= article.date %>
+                      </td>
+                      <td>
+                        <%= article.nom %>
+                      </td>
+                      <td>
+                        <%= article.code %>
+                      </td>
+                      <td>
+                        <%= article.description %>
+                      </td>
+                      <td><img src="<%= article.image.replace('uploads/', '/uploads/') %>" alt="<%= article.nom %>"
+                          width="100"></td>
+                      <td>
+                        <%= article.prix %>
+                      </td>
+                      <td>
+                        <%= article.quantite %>
+                      </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+              </table>
+              <% } else { %>
+                <p>Aucun article trouvé.</p>
+                <% } %>
+                  <h2>Créer un article</h2>
+                  <form action="/admin/create-article" method="post" enctype="multipart/form-data">
+                    <label for="nom">Nom:</label>
+                    <input type="text" id="nom" name="nom" required>
+
+                    <label for="code">Code de référence:</label>
+                    <input type="text" id="code" name="code" required pattern="[A-Za-z0-9]+"
+                      title="Le code de référence doit contenir uniquement des lettres et des chiffres">
+
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" required></textarea>
+
+                    <label for="image">Image:</label>
+                    <input type="file" id="image" name="image" accept="image/*" required>
+
+                    <label for="prix">Prix:</label>
+                    <input type="number" id="prix" name="prix" min="0" step="0.01" required>
+
+                    <label for="quantite">Quantité:</label>
+                    <input type="number" id="quantite" name="quantite" min="0" required>
+
+                    <input type="submit" value="Créer">
+ <script>
+    // Function to add a new row to the table
+    function addArticle(article) {
+      const tableBody = document.querySelector('tbody');
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `
+        <td>${article.date}</td>
+        <td>${article.nom}</td>
+        <td>${article.code}</td>
+        <td>${article.description}</td>
+        <td><img src="${article.image.replace('uploads/', '/uploads/')}" alt="${article.nom}" width="100"></td>
+        <td>${article.prix}</td>
+        <td>${article.quantite}</td>
+      `;
+      tableBody.appendChild(newRow);
+    }
+
+    // Check if the success message is displayed
+    let successMessage = document.querySelector('.success-message');
+    if (successMessage) {
+      // Get the new article data from the success message
+      const newArticle = JSON.parse(successMessage.textContent.replace('Article créée avec succès: ', ''));
+      // Add the new article to the table
+      addArticle(newArticle);
+    }
+
+    // Check if the articles array is empty
+    const articles = <%- JSON.stringify(locals.articles) %>;
+    if (articles.length === 0) {
+      // Display the "Aucun article trouvé." message
+      const table = document.querySelector('table');
+      table.style.display = 'none';
+      successMessage = document.createElement('p');
+      successMessage.textContent = 'Aucun article trouvé.';
+      document.querySelector('.container').appendChild(successMessage);
+    } else {
+      // Hide the "Aucun article trouvé." message
+      successMessage = document.querySelector('.container p');
+      if (successMessage) {
+        successMessage.style.display = 'none';
+      }
+    }
+  </script> 
+</body>
+
+</html>
