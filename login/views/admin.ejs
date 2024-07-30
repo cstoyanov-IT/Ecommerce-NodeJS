@@ -1,136 +1,186 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="UTF-8">
-  <title>Admin Panel</title>
+  <title>Panneau d'administration</title>
   <link rel="stylesheet" href="/style.css">
- </head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+</head>
+
 <body>
   <div class="container">
-    <h1>Admin Panel</h1>
+    <h1>Panneau d'administration</h1>
     <a href="/logout">Déconnexion</a>
 
-    <% if (locals.successMessage) { %>
-      <p class="success-message">
-        <%= locals.successMessage %>
-      </p>
-      <% } %>
+    <div class="admin-panel">
+      <div class="column">
+        <button class="accordion">Ajouter un article</button>
+        <div class="panel">
+          <form action="/admin/create-article" method="post" enctype="multipart/form-data">
+            <label for="nom">Nom:</label>
+            <input type="text" id="nom" name="nom" required>
 
-        <% if (locals.errorMessage) { %>
-          <p class="error-message">
-            <%= locals.errorMessage %>
-          </p>
+            <label for="code">Code de référence:</label>
+            <input type="text" id="code" name="code" required pattern="[A-Za-z0-9]+"
+              title="Le code de référence doit contenir uniquement des lettres et des chiffres">
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea>
+
+            <label for="image">Image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+
+            <label for="prix">Prix:</label>
+            <input type="number" id="prix" name="prix" min="0" step="0.01" required>
+
+            <label for="quantite">Quantité:</label>
+            <input type="number" id="quantite" name="quantite" min="0" required>
+
+            <input type="submit" value="Ajouter cet article">
+          </form>
+        </div>
+      </div>
+
+      <div class="column">
+        <h2>Liste des articles</h2>
+        <div class="article-grid" <% if (!Array.isArray(locals.articles) || locals.articles.length === 0) { %>style="display: none;"<% } %>>
+          <% if (Array.isArray(locals.articles)) { %>
+            <% for (let article of locals.articles) { %>
+              <div class="article-card">
+                <a href="/admin/article/<%= article.code %>">
+                  <img src="<%= article.image.replace('uploads/', '/uploads/') %>" alt="<%= article.nom %>">
+                  <h3><%= article.nom %></h3>
+                </a>
+                <p><%= article.description %></p>
+                <p>Prix: <%= article.prix %></p>
+                <button class="edit-button" data-code="<%= article.code %>">Modifier</button>
+                <button class="delete-button" data-code="<%= article.code %>">Supprimer</button>
+              </div>
+            <% } %>
           <% } %>
-            <h2>Liste des articles</h2>
-            <% if (Array.isArray(locals.articles) && locals.articles.length> 0) { %>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Nom</th>
-                    <th>Code</th>
-                    <th>Description</th>
-                    <th>Image</th>
-                    <th>Prix</th>
-                    <th>Quantité</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% for (let article of locals.articles) { %>
-                    <tr>
-                      <td>
-                        <%= article.date %>
-                      </td>
-                      <td>
-                        <%= article.nom %>
-                      </td>
-                      <td>
-                        <%= article.code %>
-                      </td>
-                      <td>
-                        <%= article.description %>
-                      </td>
-                      <td><img src="<%= article.image.replace('uploads/', '/uploads/') %>" alt="<%= article.nom %>"
-                          width="100"></td>
-                      <td>
-                        <%= article.prix %>
-                      </td>
-                      <td>
-                        <%= article.quantite %>
-                      </td>
-                    </tr>
-                    <% } %>
-                </tbody>
-              </table>
-              <% } else { %>
-                <p>Aucun article trouvé.</p>
-                <% } %>
-                  <h2>Créer un article</h2>
-                  <form action="/admin/create-article" method="post" enctype="multipart/form-data">
-                    <label for="nom">Nom:</label>
-                    <input type="text" id="nom" name="nom" required>
+        </div>
+        <% if (!Array.isArray(locals.articles) || locals.articles.length === 0) { %>
+          <p id="no-articles-message">Aucun article trouvé.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
 
-                    <label for="code">Code de référence:</label>
-                    <input type="text" id="code" name="code" required pattern="[A-Za-z0-9]+"
-                      title="Le code de référence doit contenir uniquement des lettres et des chiffres">
+  <script>
+    // Configuration de Toastr
+    toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": true,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": false,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    };
 
-                    <label for="description">Description:</label>
-                    <textarea id="description" name="description" required></textarea>
+    function showNotification(message, type = 'success') {
+      toastr[type](message);
+    }
 
-                    <label for="image">Image:</label>
-                    <input type="file" id="image" name="image" accept="image/*" required>
+    // Afficher le message de succès s'il existe
+    <% if (locals.successMessage) { %>
+      showNotification('<%= locals.successMessage %>');
+    <% } %>
 
-                    <label for="prix">Prix:</label>
-                    <input type="number" id="prix" name="prix" min="0" step="0.01" required>
-
-                    <label for="quantite">Quantité:</label>
-                    <input type="number" id="quantite" name="quantite" min="0" required>
-
-                    <input type="submit" value="Créer">
- <script>
-    // Function to add a new row to the table
     function addArticle(article) {
-      const tableBody = document.querySelector('tbody');
-      const newRow = document.createElement('tr');
-      newRow.innerHTML = `
-        <td>${article.date}</td>
-        <td>${article.nom}</td>
-        <td>${article.code}</td>
-        <td>${article.description}</td>
-        <td><img src="${article.image.replace('uploads/', '/uploads/')}" alt="${article.nom}" width="100"></td>
-        <td>${article.prix}</td>
-        <td>${article.quantite}</td>
-      `;
-      tableBody.appendChild(newRow);
-    }
-
-    // Check if the success message is displayed
-    let successMessage = document.querySelector('.success-message');
-    if (successMessage) {
-      // Get the new article data from the success message
-      const newArticle = JSON.parse(successMessage.textContent.replace('Article créée avec succès: ', ''));
-      // Add the new article to the table
-      addArticle(newArticle);
-    }
-
-    // Check if the articles array is empty
-    const articles = <%- JSON.stringify(locals.articles) %>;
-    if (articles.length === 0) {
-      // Display the "Aucun article trouvé." message
-      const table = document.querySelector('table');
-      table.style.display = 'none';
-      successMessage = document.createElement('p');
-      successMessage.textContent = 'Aucun article trouvé.';
-      document.querySelector('.container').appendChild(successMessage);
-    } else {
-      // Hide the "Aucun article trouvé." message
-      successMessage = document.querySelector('.container p');
-      if (successMessage) {
-        successMessage.style.display = 'none';
+      const articleGrid = document.querySelector('.article-grid');
+      const noArticlesMessage = document.getElementById('no-articles-message');
+      
+      if (noArticlesMessage) {
+        noArticlesMessage.style.display = 'none';
       }
+      
+      articleGrid.style.display = 'grid';
+      
+      const newArticleCard = document.createElement('div');
+      newArticleCard.classList.add('article-card');
+      newArticleCard.innerHTML = `
+        <a href="/admin/article/${article.code}">
+          <img src="${article.image.replace('uploads/', '/uploads/')}" alt="${article.nom}">
+          <h3>${article.nom}</h3>
+        </a>
+        <p>${article.description}</p>
+        <p>Prix: ${article.prix}</p>
+        <button class="edit-button" data-code="${article.code}">Modifier</button>
+        <button class="delete-button" data-code="${article.code}">Supprimer</button>
+      `;
+      articleGrid.appendChild(newArticleCard);
     }
-  </script> 
+
+    // Fonction pour supprimer un article
+    function deleteArticle(code) {
+      fetch(`/admin/delete-article/${code}`, {
+        method: 'DELETE',
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.message) {
+            showNotification(data.message);
+            window.location.reload();
+          } else if (data.error) {
+            throw new Error(data.error);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          showNotification(error.message, 'error');
+        });
+    }
+
+    // Ajouter des écouteurs d'événements aux boutons de suppression
+    document.addEventListener('DOMContentLoaded', function() {
+      const deleteButtons = document.querySelectorAll('.delete-button');
+      deleteButtons.forEach((button) => {
+        button.addEventListener('click', function() {
+          const code = this.dataset.code;
+          if (confirm(`Êtes-vous sûr de vouloir supprimer l'article avec le code ${code}?`)) {
+            deleteArticle(code);
+          }
+        });
+      });
+    });
+
+    // Ajouter des écouteurs d'événements aux boutons de modification
+    const editButtons = document.querySelectorAll('.edit-button');
+    editButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const code = button.dataset.code;
+        window.location.href = `/admin/edit-article/${code}`;
+      });
+    });
+
+    // Ajouter un écouteur d'événement au bouton d'accordéon
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+      acc[i].addEventListener("click", function () {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        if (panel.style.display === "block") {
+          panel.style.display = "none";
+        } else {
+          panel.style.display = "block";
+        }
+      });
+    }
+  </script>
 </body>
 
 </html>

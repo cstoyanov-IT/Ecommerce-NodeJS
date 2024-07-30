@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Article Details</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Article Details</h1>
+    <a href="/admin/panel">Retour au panneau d'administration</a>
+    <div class="article-details">
+      <img src="<%= article.image.replace('uploads/', '/uploads/') %>" alt="<%= article.nom %>">
+      <h2><%= article.nom %></h2>
+      <p><strong>Description:</strong> <%= article.description %></p>
+      <p><strong>Code:</strong> <%= article.code %></p>
+      <p><strong>Prix:</strong> <%= article.prix %></p>
+      <p><strong>Quantité:</strong> <%= article.quantite %></p>
+      <p><strong>Date de création:</strong> <%= article.date %></p>
+    </div>
+  </div>
+</body>
+
+</html>
+
